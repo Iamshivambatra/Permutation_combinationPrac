@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Permutations & Combinations — CA Foundation Master Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #534AB7; --purple-light: #EEEDFE; --purple-mid: #AFA9EC;
+    --teal: #0F6E56; --teal-light: #E1F5EE; --teal-mid: #5DCAA5;
+    --coral: #993C1D; --coral-light: #FAECE7; --coral-mid: #F0997B;
+    --amber: #854F0B; --amber-light: #FAEEDA; --amber-mid: #FAC775;
+    --blue: #185FA5; --blue-light: #E6F1FB; --blue-mid: #85B7EB;
+    --green: #3B6D11; --green-light: #EAF3DE; --green-mid: #97C459;
+    --pink: #993556; --pink-light: #FBEAF0; --pink-mid: #ED93B1;
+    --gray: #444441; --gray-light: #F1EFE8; --gray-mid: #B4B2A9;
+    --bg: #FAFAF8; --white: #FFFFFF;
+    --text: #1C1C1A; --text2: #5F5E5A; --text3: #888780;
+    --radius: 14px; --radius-sm: 8px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --shadow-lg: 0 4px 24px rgba(0,0,0,0.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* ── HEADER ── */
+  .hero {
+    background: linear-gradient(135deg, #534AB7 0%, #3C3489 50%, #26215C 100%);
+    padding: 48px 40px 40px;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(255,255,255,0.06) 0%, transparent 60%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.04) 0%, transparent 50%);
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 100px;
+    padding: 5px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 42px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .hero h1 span { color: #FAC775; }
+  .hero p {
+    font-size: 17px;
+    opacity: 0.85;
+    max-width: 560px;
+    margin: 0 auto 24px;
+  }
+  .hero-stats {
+    display: flex; gap: 24px; justify-content: center; flex-wrap: wrap;
+  }
+  .hero-stat {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius-sm);
+    padding: 10px 20px;
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .hero-stat span { font-size: 22px; display: block; }
+
+  /* ── NAV ── */
+  .toc {
+    background: var(--white);
+    border-bottom: 1px solid #E8E6DE;
+    padding: 14px 40px;
+    display: flex; gap: 6px; flex-wrap: wrap;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .toc a {
+    font-size: 12px; font-weight: 700; text-decoration: none;
+    padding: 5px 12px; border-radius: 100px;
+    background: var(--gray-light); color: var(--gray);
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .toc a:hover { background: var(--purple-light); color: var(--purple); }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 960px; margin: 0 auto; padding: 40px 32px; }
+  .section { margin-bottom: 56px; }
+  .section-header {
+    display: flex; align-items: center; gap: 14px;
+    margin-bottom: 28px; padding-bottom: 14px;
+    border-bottom: 2px solid var(--gray-light);
+  }
+  .section-num {
+    width: 42px; height: 42px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 18px; font-weight: 800; color: white; flex-shrink: 0;
+  }
+  .section h2 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 26px; font-weight: 700; color: var(--text);
+  }
+  .section-sub { font-size: 13px; color: var(--text3); font-weight: 600; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    border: 1px solid #E8E6DE;
+    padding: 24px;
+    margin-bottom: 16px;
+  }
+  .card-purple { border-left: 4px solid var(--purple); background: var(--purple-light); }
+  .card-teal { border-left: 4px solid var(--teal); background: var(--teal-light); }
+  .card-coral { border-left: 4px solid var(--coral); background: var(--coral-light); }
+  .card-amber { border-left: 4px solid var(--amber); background: var(--amber-light); }
+  .card-blue { border-left: 4px solid var(--blue); background: var(--blue-light); }
+  .card-green { border-left: 4px solid var(--green); background: var(--green-light); }
+  .card-pink { border-left: 4px solid var(--pink); background: var(--pink-light); }
+  .card h3 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 18px; font-weight: 700; margin-bottom: 10px;
+  }
+  .card-purple h3 { color: var(--purple); }
+  .card-teal h3 { color: var(--teal); }
+  .card-coral h3 { color: var(--coral); }
+  .card-amber h3 { color: var(--amber); }
+  .card-blue h3 { color: var(--blue); }
+  .card-green h3 { color: var(--green); }
+  .card-pink h3 { color: var(--pink); }
+
+  /* ── GRID ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  @media(max-width: 680px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+    .container { padding: 24px 18px; }
+    .hero { padding: 32px 20px; }
+    .hero h1 { font-size: 28px; }
+    .toc { padding: 12px 18px; }
+  }
+
+  /* ── FORMULA BOX ── */
+  .formula-box {
+    background: #1C1C2E;
+    border-radius: var(--radius);
+    padding: 20px 24px;
+    margin: 16px 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .formula-box::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #534AB7, #5DCAA5, #FAC775);
+  }
+  .formula-box .formula-label {
+    font-size: 11px; font-weight: 800; letter-spacing: 1.5px;
+    text-transform: uppercase; color: #FAC775; margin-bottom: 8px;
+  }
+  .formula-box .formula-main {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 28px; font-weight: 700; color: white;
+    line-height: 1.4;
+  }
+  .formula-box .formula-note {
+    font-size: 12px; color: #888; margin-top: 8px;
+  }
+
+  /* ── ANALOGY / STORY ── */
+  .analogy {
+    background: #FFF8EC;
+    border: 1px solid #FAC775;
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    margin: 14px 0;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .analogy-icon {
+    font-size: 28px; flex-shrink: 0; line-height: 1;
+  }
+  .analogy-title { font-weight: 800; font-size: 13px; color: var(--amber); margin-bottom: 4px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  /* ── MISTAKE BOX ── */
+  .mistake {
+    background: #FEF2F2;
+    border: 1px solid #F09595;
+    border-radius: var(--radius);
+    padding: 18px 20px; margin: 14px 0;
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .mistake-icon { font-size: 24px; flex-shrink: 0; }
+  .mistake-title { font-weight: 800; font-size: 13px; color: #A32D2D; margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+  .wrong { color: #A32D2D; font-weight: 700; }
+  .right { color: #3B6D11; font-weight: 700; }
+
+  /* ── TIP BOX ── */
+  .tip {
+    background: var(--blue-light);
+    border: 1px solid var(--blue-mid);
+    border-radius: var(--radius);
+    padding: 16px 20px; margin: 14px 0;
+    display: flex; gap: 12px; align-items: flex-start;
+  }
+  .tip-icon { font-size: 22px; flex-shrink: 0; }
+  .tip-title { font-weight: 800; font-size: 12px; color: var(--blue); margin-bottom: 4px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  /* ── EXAMPLE / SOLVED ── */
+  .example { background: var(--white); border: 1px solid #E8E6DE; border-radius: var(--radius); margin: 14px 0; overflow: hidden; }
+  .example-header {
+    padding: 12px 20px;
+    font-weight: 800; font-size: 13px; letter-spacing: 0.5px; text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ex-easy .example-header { background: var(--green-light); color: var(--green); }
+  .ex-medium .example-header { background: var(--amber-light); color: var(--amber); }
+  .ex-hard .example-header { background: var(--coral-light); color: var(--coral); }
+  .ex-ca .example-header { background: var(--purple-light); color: var(--purple); }
+  .example-body { padding: 16px 20px; }
+  .example-q { font-weight: 700; margin-bottom: 12px; font-size: 15px; color: var(--text); }
+  .example-step { display: flex; gap: 10px; margin-bottom: 8px; font-size: 14px; }
+  .step-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800; color: white; flex-shrink: 0; margin-top: 1px;
+  }
+  .answer-box {
+    background: var(--teal-light);
+    border: 1px solid var(--teal-mid);
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    margin-top: 12px;
+    font-weight: 700; color: var(--teal);
+    font-size: 15px;
+  }
+
+  /* ── FACTORIAL TABLE ── */
+  .fact-table { border-collapse: collapse; width: 100%; margin: 14px 0; }
+  .fact-table th, .fact-table td { padding: 10px 16px; text-align: center; border: 1px solid #E8E6DE; font-size: 14px; }
+  .fact-table th { background: var(--purple-light); color: var(--purple); font-weight: 800; font-size: 13px; }
+  .fact-table tr:nth-child(even) td { background: #FAFAF8; }
+  .fact-table .highlight-row td { background: var(--amber-light); font-weight: 700; color: var(--amber); }
+
+  /* ── SUMMARY TABLE ── */
+  .sum-table { border-collapse: collapse; width: 100%; margin: 14px 0; border-radius: var(--radius); overflow: hidden; }
+  .sum-table th { padding: 12px 16px; font-size: 13px; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
+  .sum-table td { padding: 11px 16px; border-bottom: 1px solid #E8E6DE; font-size: 13px; vertical-align: top; }
+  .sum-table tr:last-child td { border-bottom: none; }
+  .tag {
+    display: inline-block; padding: 2px 10px; border-radius: 100px;
+    font-size: 11px; font-weight: 800; letter-spacing: 0.5px;
+  }
+  .tag-and { background: var(--teal-light); color: var(--teal); }
+  .tag-or { background: var(--coral-light); color: var(--coral); }
+  .tag-perm { background: var(--purple-light); color: var(--purple); }
+  .tag-comb { background: var(--blue-light); color: var(--blue); }
+  .tag-circ { background: var(--amber-light); color: var(--amber); }
+  .tag-ident { background: var(--green-light); color: var(--green); }
+  .tag-rep { background: var(--pink-light); color: var(--pink); }
+  .code { background: #F1EFE8; border-radius: 4px; padding: 1px 6px; font-family: monospace; font-size: 13px; color: var(--gray); }
+
+  /* ── PRACTICE ── */
+  .practice-q {
+    background: var(--white);
+    border: 1px solid #E8E6DE;
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .practice-q:hover { border-color: var(--purple-mid); }
+  .practice-q-text { font-weight: 600; font-size: 14px; margin-bottom: 0; }
+  .practice-ans {
+    margin-top: 10px;
+    padding: 12px 14px;
+    background: var(--teal-light);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    display: none;
+  }
+  .practice-ans.show { display: block; }
+  .reveal-btn {
+    display: inline-block; margin-top: 8px;
+    background: none; border: 1px solid var(--purple-mid);
+    color: var(--purple); border-radius: 100px;
+    padding: 4px 14px; font-size: 12px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.2s;
+  }
+  .reveal-btn:hover { background: var(--purple-light); }
+
+  /* ── BADGE PILLS ── */
+  .pill {
+    display: inline-block; padding: 3px 12px; border-radius: 100px;
+    font-size: 12px; font-weight: 800; letter-spacing: 0.3px;
+  }
+  .pill-purple { background: var(--purple); color: white; }
+  .pill-teal { background: var(--teal); color: white; }
+  .pill-coral { background: var(--coral); color: white; }
+
+  /* ── KEY RULE HIGHLIGHT ── */
+  .key-rule {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--purple-light);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px; margin: 10px 0;
+    font-weight: 700; font-size: 14px; color: var(--purple);
+  }
+  .key-rule span { font-size: 20px; }
+
+  /* ── VISUAL EXPLAINER ── */
+  .vis-box {
+    background: var(--white);
+    border: 1px solid #E8E6DE;
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .vis-big { font-size: 32px; font-weight: 800; color: var(--text); margin: 8px 0; font-family: 'Baloo 2', sans-serif; }
+  .arrow { font-size: 20px; color: var(--text3); margin: 0 8px; }
+
+  /* ── MINDSET SECTION ── */
+  .mindset {
+    background: linear-gradient(135deg, #3C3489, #185FA5);
+    border-radius: var(--radius);
+    padding: 28px 32px;
+    color: white;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .mindset h3 { font-family: 'Baloo 2', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+  .mindset p { opacity: 0.85; font-size: 15px; }
+  .vs-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 100px;
+    padding: 4px 14px;
+    font-size: 13px;
+    font-weight: 800;
+    margin: 0 8px;
+  }
+
+  /* ── TRICK BOX ── */
+  .trick {
+    background: #FFF8EC;
+    border: 1px solid #FAC775;
+    border-radius: var(--radius-sm);
+    padding: 14px 18px; margin: 10px 0;
+  }
+  .trick-title { font-weight: 800; font-size: 13px; color: var(--amber); margin-bottom: 4px; }
+
+  /* footer */
+  .footer {
+    background: var(--purple);
+    color: white; text-align: center;
+    padding: 28px 20px; font-size: 13px; opacity: 0.9;
+  }
+  .footer strong { color: #FAC775; }
+
+  ul.styled { padding-left: 0; list-style: none; }
+  ul.styled li { padding: 4px 0 4px 20px; position: relative; font-size: 14px; }
+  ul.styled li::before { content: '▸'; position: absolute; left: 0; color: var(--purple); font-size: 12px; top: 5px; }
+  p + p { margin-top: 8px; }
+  strong { font-weight: 700; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">CA Foundation Mathematics</div>
+  <h1>Permutations &amp;<br><span>Combinations</span></h1>
+  <p>The most complete, beginner-friendly notes — from zero to CA exam hero. Understand the logic, not just the formulas.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><span>8</span>Topics Covered</div>
+    <div class="hero-stat"><span>20+</span>Solved Examples</div>
+    <div class="hero-stat"><span>30+</span>Practice Questions</div>
+    <div class="hero-stat"><span>∞</span>Exam Confidence</div>
+  </div>
+</div>
+
+<!-- STICKY NAV -->
+<nav class="toc">
+  <a href="#s0">Mindset</a>
+  <a href="#s1">Counting Rules</a>
+  <a href="#s2">Factorials</a>
+  <a href="#s3">Permutations</a>
+  <a href="#s4">Special Cases</a>
+  <a href="#s5">Combinations</a>
+  <a href="#s6">Properties</a>
+  <a href="#s7">Strategies</a>
+  <a href="#s10">Tricks</a>
+  <a href="#s8">Summary</a>
+  <a href="#s9">Practice</a>
+</nav>
+
+<div class="container">
+
+<!-- ─────────────────────────────────────────── MINDSET ── -->
+<div id="s0" class="section">
+  <div class="mindset">
+    <h3>🧠 The Golden Mindset</h3>
+    <p>P&amp;C is NOT about math. It is about <strong>logic — the science of counting</strong>.<br>
+    Every single problem boils down to one question:</p>
+    <p style="font-size:18px; margin-top:14px; font-weight:800;">
+      Am I <span class="vs-badge">ARRANGING</span> things?
+      &nbsp;OR&nbsp;
+      Am I <span class="vs-badge">SELECTING</span> things?
+    </p>
+    <p style="margin-top:12px; font-size:14px; opacity:0.75;">If ORDER matters → Permutation &nbsp;|&nbsp; If ORDER doesn't matter → Combination</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="card card-purple">
+      <h3>Permutation = ARRANGEMENT</h3>
+      <p style="font-size:14px;">The <strong>order matters</strong>. A-B-C is different from C-B-A.</p>
+      <p style="font-size:13px; margin-top:8px; color:var(--purple);">🏆 Awarding 1st, 2nd, 3rd rank<br>🔐 Creating a 4-digit PIN<br>📸 Seating people in a row</p>
+    </div>
+    <div class="card card-teal">
+      <h3>Combination = SELECTION</h3>
+      <p style="font-size:14px;">The <strong>order doesn't matter</strong>. A-B-C is the same as C-B-A.</p>
+      <p style="font-size:13px; margin-top:8px; color:var(--teal);">👥 Choosing a cricket team<br>🌸 Picking flowers for a bouquet<br>🗳️ Forming a committee</p>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────── SECTION 1 ── -->
+<div id="s1" class="section">
+  <div class="section-header">
+    <div class="section-num" style="background: linear-gradient(135deg, #534AB7, #3C3489);">1</div>
+    <div>
+      <div class="section-sub">The Foundation</div>
+      <h2>Fundamental Principles of Counting</h2>
+    </div>
+  </div>
+
+  <p style="margin-bottom:20px; color:var(--text2);">Before any formula, master these two rules. <strong>Every P&amp;C problem in existence is built on just these two ideas.</strong></p>
+
+  <!-- Rule 1: Multiplication -->
+  <div class="card card-teal">
+    <h3>🔗 Rule 1 — Multiplication Rule (The "AND" Rule)</h3>
+    <p style="font-size:14px; margin-bottom:10px;">If Task 1 can be done in <strong>m</strong> ways AND Task 2 can be done in <strong>n</strong> ways,<br>then both together = <strong>m × n</strong> ways.</p>
+    <div class="formula-box">
+      <div class="formula-label">Multiplication Rule</div>
+      <div class="formula-main">Total = m × n</div>
+      <div class="formula-note">Use when tasks happen TOGETHER / ONE AFTER ANOTHER</div>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-icon">✈️</div>
+      <div>
+        <div class="analogy-title">Indian Student Analogy — Delhi to Mumbai</div>
+        <p style="font-size:14px;">There are <strong>3 flights</strong> from Delhi to Mumbai (m=3). From Mumbai airport, there are <strong>4 taxi services</strong> to your hotel (n=4). Total ways to reach hotel = <strong>3 × 4 = 12 ways</strong>.</p>
+        <p style="font-size:13px; color:var(--text3); margin-top:6px;">You need BOTH the flight AND the taxi → Multiply!</p>
+      </div>
+    </div>
+
+    <div class="key-rule"><span>💡</span> Keyword: "AND" → <strong>MULTIPLY</strong> &nbsp;|&nbsp; "followed by" → <strong>MULTIPLY</strong></div>
+  </div>
+
+  <!-- Rule 2: Addition -->
+  <div class="card card-coral">
+    <h3>➕ Rule 2 — Addition Rule (The "OR" Rule)</h3>
+    <p style="font-size:14px; margin-bottom:10px;">If Job 1 can be done in <strong>m</strong> ways OR Job 2 can be done in <strong>n</strong> ways (alternatives — you pick only one),<br>then total = <strong>m + n</strong> ways.</p>
+    <div class="formula-box">
+      <div class="formula-label">Addition Rule</div>
+      <div class="formula-main">Total = m + n</div>
+      <div class="formula-note">Use when you choose ONE ALTERNATIVE from multiple options</div>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-icon">🍽️</div>
+      <div>
+        <div class="analogy-title">Indian Student Analogy — Canteen Snacks</div>
+        <p style="font-size:14px;">The canteen has <strong>5 types of samosas</strong> and <strong>3 types of kachoris</strong>. If you want to eat only ONE snack (samosa OR kachori), you have <strong>5 + 3 = 8 options</strong>.</p>
+        <p style="font-size:13px; color:var(--text3); margin-top:6px;">You choose ONE thing — either samosa or kachori → Add!</p>
+      </div>
+    </div>
+
+    <div class="key-rule" style="background:var(--coral-light); color:var(--coral);"><span>💡</span> Keyword: "OR" → <strong>ADD</strong> &nbsp;|&nbsp; "either/alternatively" → <strong>ADD</strong></div>
+  </div>
+
+  <!-- Quick Decision Visual -->
+  <div class="vis-box">
+    <p style="font-weight:800; font-size:15px; color:var(--text);">Quick Decision Flow</p>
+    <div style="margin-top:12px; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:6px;">
+      <div style="background:var(--gray-light); border-radius:8px; padding:8px 14px; font-weight:700; font-size:13px;">See keyword</div>
+      <div class="arrow">→</div>
+      <div style="background:var(--teal-light); border-radius:8px; padding:8px 14px; font-weight:700; font-size:13px; color:var(--teal);">"AND" / "both"</div>
+      <div class="arrow">→</div>
+      <div style="background:var(--teal); color:white; border-radius:8px; padding:8px 14px; font-weight:800; font-size:14px;">MULTIPLY ×</div>
+    </div>
+    <div style="margin-top:8px; display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:6px;">
+      <div style="background:var(--gray-light); border-radius:8px; padding:8px 14px; font-weight:700; font-size:13px;">See keyword</div>
+      <div class="arrow">→</div>
+      <div style="background:var(--coral-light); border-radius:8px; padding:8px 14px; font-weight:700; font-size:13px; color:var(--coral);">"OR" / "either"</div>
+      <div class="arrow">→</div>
+      <div style="background:var(--coral); color:white; border-radius:8px; padding:8px 14px; font-weight:800; font-size:14px;">ADD +</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────── SECTION 2 ── -->
+<div id="s2" class="section">
+  <div class="section-header">
+    <div class="section-num" style="background: linear-gradient(135deg, #854F0B, #633806);">2</div>
+    <div>
+      <div class="section-sub">The Building Block</div>
+      <h2>Factorials (!)</h2>
+    </div>
+  </div>
+
+  <div class="card card-amber">
+    <h3>What is a Factorial?</h3>
+    <p style="font-size:14px;">A factorial is a <strong>shorthand way of writing the product of consecutive natural numbers from 1 to n</strong>.</p>
+    <div class="formula-box" style="margin-top:12px;">
+      <div class="formula-label">Definition</div>
+      <div class="formula-main">n! = n × (n−1) × (n−2) × … × 3 × 2 × 1</div>
+      <div class="formula-note">Read "n factorial". Also written as ⌊n (floor n)</div>
+    </div>
+    <div class="formula-box" style="margin-top:10px; background:#1a2535;">
+      <div class="formula-label" style="color:#5DCAA5;">Recursive Property (Very Useful!)</div>
+      <div class="formula-main">n! = n × (n−1)!</div>
+      <div class="formula-note">Example: 6! = 6 × 5! = 6 × 120 = 720</div>
+    </div>
+  </div>
+
+  <!-- Factorial Table -->
+  <div class="card" style="padding:0; overflow:hidden;">
+    <div style="padding:14px 20px; background:var(--purple-light); border-bottom:1px solid #E8E6DE;">
+      <strong style="color:var(--purple); font-size:14px;">📊 Essential Values to Memorize</strong>
+    </div>
+    <div style="overflow-x:auto;">
+    <table class="fact-table">
+      <thead><tr><th>n</th><th>n!</th><th>How to calculate</th><th>Memory Trick</th></tr></thead>
+      <tbody>
+        <tr class="highlight-row"><td>0!</td><td>1</td><td>By definition (rule)</td><td>Zero people arranged = 1 way (empty arrangement)</td></tr>
+        <tr><td>1!</td><td>1</td><td>1</td><td>One person, one way</td></tr>
+        <tr><td>2!</td><td>2</td><td>2 × 1</td><td>AB or BA = 2 ways</td></tr>
+        <tr><td>3!</td><td>6</td><td>3 × 2 × 1</td><td>ABC has 6 arrangements</td></tr>
+        <tr><td>4!</td><td>24</td><td>4 × 3 × 2 × 1</td><td>24 hours in a day!</td></tr>
+        <tr><td>5!</td><td>120</td><td>5 × 4 × 3 × 2 × 1</td><td>Cricket team (11) minus 6 = 120</td></tr>
+        <tr><td>6!</td><td>720</td><td>6 × 5!</td><td>6 × 120 = 720</td></tr>
+        <tr><td>7!</td><td>5040</td><td>7 × 6!</td><td>7 × 720</td></tr>
+        <tr><td>8!</td><td>40320</td><td>8 × 7!</td><td>8 × 5040</td></tr>
+        <tr><td>10!</td><td>3628800</td><td>10 × 9!</td><td>About 3.6 million</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- Common Mistake -->
+  <div class="mistake">
+    <div class="mistake-icon">❌</div>
+    <div>
+      <div class="mistake-title">Most Common Student Mistake — NEVER Do This!</div>
+      <p style="font-size:14px; margin-bottom:8px;">Factorials CANNOT be distributed over addition:</p>
+      <p class="wrong" style="font-size:15px;">(2 + 3)! ≠ 2! + 3!</p>
+      <p style="font-size:13px; color:var(--text2); margin:6px 0;">Incorrect: 2! + 3! = 2 + 6 = <span class="wrong">8</span></p>
+      <p style="font-size:13px; color:var(--text2);">Correct: (2 + 3)! = 5! = <span class="right">120</span></p>
+      <p style="font-size:13px; margin-top:8px; color:var(--text2);">First simplify the bracket, THEN apply factorial.</p>
+    </div>
+  </div>
+
+  <div class="example ex-easy">
+    <div class="example-header">✅ Solved Example — Simplification</div>
+    <div class="example-body">
+      <div class="example-q">Simplify: 8! / 6!</div>
+      <div class="example-step"><div class="step-num" style="background:var(--green);">1</div><div>Write out: 8! / 6! = (8 × 7 × 6!) / 6!</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--green);">2</div><div>Cancel 6! from numerator and denominator</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--green);">3</div><div>= 8 × 7 = 56</div></div>
+      <div class="answer-box">Answer = 56 &nbsp;✓</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────── SECTION 3 ── -->
+<div id="s3" class="section">
+  <div class="section-header">
+    <div class="section-num" style="background: linear-gradient(135deg, #534AB7, #185FA5);">3</div>
+    <div>
+      <div class="section-sub">Order Matters</div>
+      <h2>Permutations — The Art of Arrangement</h2>
+    </div>
+  </div>
+
+  <div class="card card-purple">
+    <h3>Core Idea: ORDER MATTERS in Permutations</h3>
+    <p style="font-size:14px;">If you arrange Suresh and Ramesh in 2 chairs:</p>
+    <div style="display:flex; gap:12px; margin:12px 0; flex-wrap:wrap;">
+      <div style="background:white; border:1px solid var(--purple-mid); border-radius:8px; padding:10px 16px; font-weight:700; font-size:14px; color:var(--purple);">Chair 1: Suresh &nbsp;|&nbsp; Chair 2: Ramesh</div>
+      <div style="background:white; border:1px solid var(--purple-mid); border-radius:8px; padding:10px 16px; font-weight:700; font-size:14px; color:var(--purple);">Chair 1: Ramesh &nbsp;|&nbsp; Chair 2: Suresh</div>
+    </div>
+    <p style="font-size:14px; color:var(--purple);">These are <strong>2 different permutations</strong> because position matters!</p>
+  </div>
+
+  <!-- Why the formula works -->
+  <div class="card" style="background:var(--purple-light); border:1px solid var(--purple-mid);">
+    <h3 style="color:var(--purple);">Why does the formula work? — The "Why" Approach</h3>
+    <p style="font-size:14px; margin-bottom:12px;">Imagine awarding 1st, 2nd, and 3rd ranks from a class of 10 CA students:</p>
+    <div style="display:flex; gap:8px; margin:10px 0; flex-wrap:wrap; align-items:center;">
+      <div style="text-align:center;">
+        <div style="background:var(--purple); color:white; border-radius:8px; padding:10px 16px; font-weight:800; font-size:16px;">10 options</div>
+        <div style="font-size:11px; color:var(--text2); margin-top:4px;">1st Rank</div>
+      </div>
+      <div style="font-size:24px; color:var(--text3);">×</div>
+      <div style="text-align:center;">
+        <div style="background:var(--purple-mid); color:white; border-radius:8px; padding:10px 16px; font-weight:800; font-size:16px;">9 options</div>
+        <div style="font-size:11px; color:var(--text2); margin-top:4px;">2nd Rank</div>
+      </div>
+      <div style="font-size:24px; color:var(--text3);">×</div>
+      <div style="text-align:center;">
+        <div style="background:#AFA9EC; color:#26215C; border-radius:8px; padding:10px 16px; font-weight:800; font-size:16px;">8 options</div>
+        <div style="font-size:11px; color:var(--text2); margin-top:4px;">3rd Rank</div>
+      </div>
+      <div style="font-size:24px; color:var(--text3);">=</div>
+      <div style="text-align:center;">
+        <div style="background:var(--teal); color:white; border-radius:8px; padding:10px 16px; font-weight:800; font-size:18px;">720</div>
+        <div style="font-size:11px; color:var(--text2); margin-top:4px;">Total ways</div>
+      </div>
+    </div>
+    <p style="font-size:13px; color:var(--text2);">This is exactly 10P3 = 10 × 9 × 8 = 720. The formula just automates this logic!</p>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula-label">Key Formula — Permutations</div>
+    <div class="formula-main">ⁿPᵣ = n! / (n − r)!</div>
+    <div class="formula-note">n = total items available &nbsp;|&nbsp; r = items to be arranged</div>
+  </div>
+
+  <div class="tip">
+    <div class="tip-icon">💡</div>
+    <div>
+      <div class="tip-title">Shortcut — No Need to Expand Full Factorial!</div>
+      <p style="font-size:13px;">ⁿPᵣ = n × (n−1) × (n−2) × … (r terms). Just multiply r terms starting from n going down.</p>
+      <p style="font-size:13px; margin-top:4px;">Example: 8P3 = 8 × 7 × 6 = 336 &nbsp;&nbsp; (3 terms starting from 8)</p>
+    </div>
+  </div>
+
+  <!-- Examples -->
+  <div class="example ex-easy">
+    <div class="example-header">🟢 Easy — Evaluate 5P3</div>
+    <div class="example-body">
+      <div class="example-step"><div class="step-num" style="background:var(--green);">1</div><div>5P3 = 5! / (5−3)! = 5! / 2!</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--green);">2</div><div>= (5 × 4 × 3 × 2!) / 2! = 5 × 4 × 3</div></div>
+      <div class="answer-box">5P3 = 60</div>
+    </div>
+  </div>
+
+  <div class="example ex-medium">
+    <div class="example-header">🟡 Moderate — 3-letter words from "SQUARE"</div>
+    <div class="example-body">
+      <div class="example-q">How many 3-letter words can be formed from the letters of "SQUARE"?</div>
+      <div class="example-step"><div class="step-num" style="background:var(--amber);">1</div><div>"SQUARE" has 6 distinct letters: S, Q, U, A, R, E</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--amber);">2</div><div>We need to choose AND arrange 3 letters → use Permutation</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--amber);">3</div><div>6P3 = 6 × 5 × 4 = 120</div></div>
+      <div class="answer-box">120 three-letter words possible</div>
+    </div>
+  </div>
+
+  <div class="example ex-medium">
+    <div class="example-header">🟡 Moderate — Sisters Always Together</div>
+    <div class="example-body">
+      <div class="example-q">Arrange 4 brothers and 3 sisters in a row so that all 3 sisters always sit together.</div>
+      <div class="example-step"><div class="step-num" style="background:var(--amber);">1</div><div><strong>Bundle the restriction:</strong> Treat 3 sisters as ONE single unit/block</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--amber);">2</div><div>Now we have: 4 brothers + 1 sister-block = 5 units to arrange</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--amber);">3</div><div>Arrange 5 units: 5! = 120 ways</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--amber);">4</div><div>Arrange 3 sisters WITHIN their block: 3! = 6 ways</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--amber);">5</div><div>Total = 5! × 3! = 120 × 6 = 720</div></div>
+      <div class="answer-box">Total = 720 ways</div>
+    </div>
+  </div>
+
+  <div class="example ex-ca">
+    <div class="example-header">🟣 CA Exam Level — 4-digit numbers &gt; 3000</div>
+    <div class="example-body">
+      <div class="example-q">How many 4-digit numbers greater than 3000 can be formed using digits 1, 2, 3, 5, 7, 8, 9 without repetition?</div>
+      <div class="example-step"><div class="step-num" style="background:var(--purple);">1</div><div><strong>Restriction first:</strong> For a 4-digit number &gt; 3000, the first digit must be 3, 5, 7, 8, or 9 → <strong>5 choices</strong></div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--purple);">2</div><div>After fixing the first digit, 6 digits remain for the next 3 positions: 6P3 = 6×5×4 = 120</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--purple);">3</div><div>Total = 5 × 120 = 600</div></div>
+      <div class="answer-box">600 four-digit numbers possible</div>
+    </div>
+  </div>
+
+  <div class="example ex-ca">
+    <div class="example-header">🟣 CA Exam Level — Gap Method (No Two Girls Together)</div>
+    <div class="example-body">
+      <div class="example-q">Arrange 6 boys and 5 girls in a row so that no two girls sit together.</div>
+      <div class="example-step"><div class="step-num" style="background:var(--purple);">1</div><div>First, arrange the 6 boys: 6! = 720 ways</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--purple);">2</div><div>Boys create gaps = n + 1 = 6 + 1 = 7<br><span style="font-size:12px; color:var(--text2);">👉 Trick: Always add 2 extra ends</span></div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--purple);">2</div><div>This creates 7 gaps: _ B _ B _ B _ B _ B _ B _</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--purple);">3</div><div>Place 5 girls in 7 gaps (no two in same gap): 7P5 = 7×6×5×4×3 = 2520</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--purple);">4</div><div>Total = 6! × 7P5 = 720 × 2520 = 1,814,400</div></div>
+      <div class="answer-box">1,814,400 arrangements (Gap Method)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────── SECTION 4 ── -->
+<div id="s4" class="section">
+  <div class="section-header">
+    <div class="section-num" style="background: linear-gradient(135deg, #854F0B, #3B6D11);">4</div>
+    <div>
+      <div class="section-sub">Special Cases</div>
+      <h2>Special Permutations</h2>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- Circular -->
+    <div class="card card-amber">
+      <h3>🔄 Circular Permutations</h3>
+      <p style="font-size:14px; margin-bottom:10px;">When people sit around a <strong>round table</strong>, there is no fixed "first" position. We fix one person as reference and arrange the rest.</p>
+      <div class="formula-box">
+        <div class="formula-label">Round Table</div>
+        <div class="formula-main">(n − 1)!</div>
+        <div class="formula-note">Fix 1 person, arrange remaining (n−1)</div>
+      </div>
+      <div class="analogy" style="margin-top:10px;">
+        <div class="analogy-icon">🍽️</div>
+        <div>
+          <div class="analogy-title">Why (n-1)! and not n!?</div>
+          <p style="font-size:13px;">In a circle, rotating everyone one seat gives the SAME arrangement. So we "fix" one person to remove this duplication. 6 people at round table = 5! = 120 (not 6!).</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Necklace -->
+    <div class="card card-green">
+      <h3>📿 Necklaces &amp; Garlands</h3>
+      <p style="font-size:14px; margin-bottom:10px;">When making a necklace, you can <strong>flip</strong> it over — so clockwise and anti-clockwise arrangements look identical.</p>
+      <div class="formula-box">
+        <div class="formula-label">Necklace / Garland</div>
+        <div class="formula-main">½ × (n − 1)!</div>
+        <div class="formula-note">Divide by 2 to remove flip duplicates</div>
+      </div>
+      <div class="tip" style="margin-top:10px;">
+        <div class="tip-icon">💡</div>
+        <div>
+          <div class="tip-title">Remember</div>
+          <p style="font-size:13px;">Round table (can't flip) → (n-1)! &nbsp;&nbsp; Necklace (can flip) → ½(n-1)!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Identical Objects -->
+  <div class="card card-blue">
+    <h3>🔁 Permutations with Identical Objects</h3>
+    <p style="font-size:14px; margin-bottom:10px;">When some objects are exactly alike, swapping identical objects doesn't create a new arrangement. We divide by the factorials of repeated items to avoid overcounting.</p>
+    <div class="formula-box">
+      <div class="formula-label">With Identical Objects</div>
+      <div class="formula-main">n! / (p₁! × p₂! × p₃! × …)</div>
+      <div class="formula-note">p₁, p₂, p₃ = count of each set of identical objects</div>
+    </div>
+    <div class="example ex-medium" style="margin-top:12px;">
+      <div class="example-header">Example — Letters of "COMMITTEE"</div>
+      <div class="example-body">
+        <div class="example-q">In how many ways can letters of "COMMITTEE" be arranged?</div>
+        <div class="example-step"><div class="step-num" style="background:var(--blue);">1</div><div>COMMITTEE = 9 letters: C, O, M, M, I, T, T, E, E → M appears 2×, T appears 2×, E appears 2×</div></div>
+        <div class="example-step"><div class="step-num" style="background:var(--blue);">2</div><div>Ways = 9! / (2! × 2! × 2!) = 362880 / 8</div></div>
+        <div class="answer-box">= 45,360 arrangements</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Repetition Allowed -->
+  <div class="card card-pink">
+    <h3>🔢 Permutations WITH Repetition</h3>
+    <p style="font-size:14px; margin-bottom:10px;">When you can reuse the same item (like digits in a PIN), each position has n choices every time.</p>
+    <div class="formula-box">
+      <div class="formula-label">Repetition Allowed</div>
+      <div class="formula-main">Total = nʳ</div>
+      <div class="formula-note">n = items to choose from, r = positions to fill</div>
+    </div>
+    <div class="analogy">
+      <div class="analogy-icon">🔐</div>
+      <div>
+        <div class="analogy-title">PIN Analogy</div>
+        <p style="font-size:13px;">A 4-digit PIN using digits 0-9 (repetition allowed): 10⁴ = 10,000 possible PINs. That's why banks use 4-digit PINs — enough variety to be secure!</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────── SECTION 5 ── -->
+<div id="s5" class="section">
+  <div class="section-header">
+    <div class="section-num" style="background: linear-gradient(135deg, #185FA5, #0C447C);">5</div>
+    <div>
+      <div class="section-sub">Order Does NOT Matter</div>
+      <h2>Combinations — The Art of Selection</h2>
+    </div>
+  </div>
+
+  <div class="card card-blue">
+    <h3>Core Idea: ORDER DOESN'T MATTER in Combinations</h3>
+    <p style="font-size:14px; margin-bottom:12px;">You are selecting a cricket team of 11 from 15 players. If Virat and Rohit are both selected, it doesn't matter which one was "chosen first" — they're in the team!</p>
+    <div style="display:flex; gap:12px; margin:12px 0; flex-wrap:wrap; align-items:center;">
+      <div style="background:white; border:1px solid var(--blue-mid); border-radius:8px; padding:10px 16px; font-size:14px; color:var(--text2);">Permutation: {A,B} ≠ {B,A} → <strong style="color:var(--purple);">2 different arrangements</strong></div>
+      <div style="font-size:20px; color:var(--text3);">vs</div>
+      <div style="background:white; border:1px solid var(--blue-mid); border-radius:8px; padding:10px 16px; font-size:14px; color:var(--text2);">Combination: {A,B} = {B,A} → <strong style="color:var(--blue);">Same team!</strong></div>
+    </div>
+    <div class="key-rule" style="background:var(--blue-light); color:var(--blue);"><span>🔑</span> nCr = nPr / r! &nbsp;→&nbsp; <strong>Selection = Arrangement ÷ Internal order</strong></div>
+  </div>
+
+  <div class="formula-box">
+    <div class="formula-label">Key Formula — Combinations</div>
+    <div class="formula-main">ⁿCᵣ = n! / (r! × (n − r)!)</div>
+    <div class="formula-note">Also: ⁿCᵣ = ⁿPᵣ / r! &nbsp;|&nbsp; n = total, r = items to select</div>
+  </div>
+
+  <div class="example ex-easy">
+    <div class="example-header">🟢 Easy — Form a committee of 3 from 12 people</div>
+    <div class="example-body">
+      <div class="example-q">In how many ways can a committee of 3 be formed from 12 people?</div>
+      <div class="example-step"><div class="step-num" style="background:var(--green);">1</div><div>Order doesn't matter in a committee → use Combination</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--green);">2</div><div>12C3 = 12! / (3! × 9!) = (12 × 11 × 10) / (3 × 2 × 1)</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--green);">3</div><div>= 1320 / 6 = 220</div></div>
+      <div class="answer-box">220 ways to form the committee</div>
+    </div>
+  </div>
+
+  <div class="example ex-medium">
+    <div class="example-header">🟡 Moderate — Mixed Committee (with conditions)</div>
+    <div class="example-body">
+      <div class="example-q">A committee of 7 is to be formed from 6 CAs, 4 Economists, and 5 Cost Accountants. The committee must have exactly 3 CAs, 2 Economists, and 2 Cost Accountants.</div>
+      <div class="example-step"><div class="step-num" style="background:var(--amber);">1</div><div>Select 3 from 6 CAs: 6C3 = 20</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--amber);">2</div><div>Select 2 from 4 Economists: 4C2 = 6</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--amber);">3</div><div>Select 2 from 5 Cost Accountants: 5C2 = 10</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--amber);">4</div><div>All three selections happen AND → Multiply: 20 × 6 × 10</div></div>
+      <div class="answer-box">Total = 1,200 ways</div>
+    </div>
+  </div>
+
+  <div class="example ex-ca">
+    <div class="example-header">🟣 CA Exam Level — Always/Never Together</div>
+    <div class="example-body">
+      <div class="example-q">A team of 5 is selected from 8 people. Person A must always be included, and Person B must never be included.</div>
+      <div class="example-step"><div class="step-num" style="background:var(--purple);">1</div><div><strong>Person A always included:</strong> Fix A in the team. Now select 4 more from remaining 6 people (excluding B).</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--purple);">2</div><div>Remaining people = 8 − 1 (A) − 1 (B) = 6 people</div></div>
+      <div class="example-step"><div class="step-num" style="background:var(--purple);">3</div><div>Select 4 from 6: 6C4 = 6C2 = 15</div></div>
+      <div class="answer-box">15 ways to form the team</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────── SECTION 6 ── -->
+<div id="s6" class="section">
+  <div class="section-header">
+    <div class="section-num" style="background: linear-gradient(135deg, #3B6D11, #085041);">6</div>
+    <div>
+      <div class="section-sub">Time-Saving Shortcuts</div>
+      <h2>Important Properties of Combinations</h2>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card card-green">
+      <h3>nCr = nC(n−r) — Complementary</h3>
+      <p style="font-size:14px; margin-bottom:8px;">Selecting r items is the same as leaving out (n−r) items!</p>
+      <div class="formula-box" style="padding:14px;">
+        <div class="formula-main" style="font-size:20px;">10C8 = 10C2 = 45</div>
+        <div class="formula-note">Always calculate the smaller one! Much faster in exams.</div>
+      </div>
+    </div>
+    <div class="card card-teal">
+      <h3>Pascal's Identity</h3>
+      <p style="font-size:14px; margin-bottom:8px;">Selecting r from n+1 = two ways from n:</p>
+      <div class="formula-box" style="padding:14px;">
+        <div class="formula-main" style="font-size:20px;">nCr + nC(r−1) = (n+1)Cr</div>
+        <div class="formula-note">Used in algebraic expansions and proofs</div>
+      </div>
+    </div>
+    <div class="card card-amber">
+      <h3>nC0 = nCn = 1</h3>
+      <p style="font-size:14px; margin-bottom:8px;">Selecting none OR selecting all = only 1 way each.</p>
+      <div class="formula-box" style="padding:14px; background:#1C1C2E;">
+        <div class="formula-main" style="font-size:20px;">10C0 = 1 &nbsp;&nbsp; 10C10 = 1</div>
+        <div class="formula-note">Zero things or all things — just one way</div>
+      </div>
+    </div>
+    <div class="card card-purple">
+      <h3>One or More Selections</h3>
+      <p style="font-size:14px; margin-bottom:8px;">Total ways to select at least 1 item from n distinct items:</p>
+      <div class="formula-box" style="padding:14px;">
+        <div class="formula-main" style="font-size:20px;">2ⁿ − 1</div>
+        <div class="formula-note">2ⁿ = all possible selections (including none). Subtract 1 for "select none" case.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card card-blue">
+    <h3>Always Included / Must Be Selected</h3>
+    <p style="font-size:14px; margin-bottom:8px;">If a specific person MUST be in the team of r (selected from n), fix them and choose the rest:</p>
+    <div class="formula-box">
+      <div class="formula-label">Always Included Formula</div>
+      <div class="formula-main">(n−1)C(r−1)</div>
+      <div class="formula-note">Fix the special person, then choose r−1 more from the remaining n−1 people</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────── SECTION 7 ── -->
+<div id="s7" class="section">
+  <div class="section-header">
+    <div class="section-num" style="background: linear-gradient(135deg, #993C1D, #4A1B0C);">7</div>
+    <div>
+      <div class="section-sub">CA Exam Mastery</div>
+      <h2>Exam Strategies &amp; Short Tricks</h2>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="trick">
+      <div class="trick-title">🎯 Strategy 1 — Handle Restrictions FIRST</div>
+      <p style="font-size:13px;">If the problem says "the President must be included" or "vowels must be together," fix those special items first, then arrange the rest freely.</p>
+    </div>
+    <div class="trick">
+      <div class="trick-title">🚫 Strategy 2 — "Never Together" Shortcut</div>
+      <p style="font-size:13px; font-weight:700; margin-bottom:4px;">Never Together = Total Ways − Always Together</p>
+      <p style="font-size:13px;">It's easier to count what you DON'T want and subtract it!</p>
+    </div>
+    <div class="trick">
+      <div class="trick-title">🔲 Strategy 3 — Gap Method</div>
+      <p style="font-size:13px;">When "no two X can be adjacent": arrange the non-X items first, then place X items in the gaps created between them.</p>
+      <p style="font-size:12px; margin-top:4px; color:var(--amber);">_ B _ B _ B _ B _ B _ B _ (n boys create n+1 gaps)</p>
+    </div>
+    <div class="trick">
+      <div class="trick-title">⚡ Strategy 4 — Use Complementary Combination</div>
+      <p style="font-size:13px;">Always compute nCr using the smaller value of r.</p>
+      <p style="font-size:13px; margin-top:4px; font-weight:700; color:var(--amber);">10C8 → use 10C2 instead. Same answer, half the work!</p>
+    </div>
+    <div class="trick">
+      <div class="trick-title">🧮 Strategy 5 — Cancel Factorials Intelligently</div>
+      <p style="font-size:13px;">For 10C3, don't calculate 10! and 7! separately:</p>
+      <p style="font-size:13px; font-weight:700; margin-top:4px; color:var(--amber);">10C3 = (10 × 9 × 8) / (3 × 2 × 1) = 120</p>
+      <p style="font-size:12px; margin-top:4px;">Only compute r terms in numerator and r! in denominator.</p>
+    </div>
+    <div class="trick">
+      <div class="trick-title">🏷️ Strategy 6 — Identify Type Instantly</div>
+      <p style="font-size:13px;"><strong>Rank / Password / Arrange / Word / Seat in row</strong> → Permutation</p>
+      <p style="font-size:13px; margin-top:4px;"><strong>Team / Committee / Group / Choose / Select</strong> → Combination</p>
+    </div>
+  </div>
+
+  <div class="mistake" style="margin-top:20px;">
+    <div class="mistake-icon">⚠️</div>
+    <div>
+      <div class="mistake-title">Common Traps in CA Exams</div>
+      <ul class="styled">
+        <li style="font-size:13px;"><strong>Round table ≠ Row:</strong> Don't use n! for circular arrangement. Use (n−1)!</li>
+        <li style="font-size:13px;"><strong>Necklace ≠ Round table:</strong> Necklace can be flipped, so use ½(n−1)!</li>
+        <li style="font-size:13px;"><strong>Digits with 0:</strong> If forming numbers, 0 cannot be the first digit — subtract those cases!</li>
+        <li style="font-size:13px;"><strong>"At least" questions:</strong> Use Total − (None) instead of adding each case separately.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- ─────────────────────────────────────────── SECTION X ── -->
+<div id="s10" class="section">
+  <div class="section-header">
+    <div class="section-num" style="background: linear-gradient(135deg, #0F6E56, #185FA5);">10</div>
+    <div>
+      <div class="section-sub">Shortcuts That Actually Work</div>
+      <h2>Permutation & Combination Tricks Library</h2>
+    </div>
+  </div>
+
+  <!-- GAP METHOD -->
+  <div class="card card-purple">
+    <h3>🔲 Gap (Slot) Method</h3>
+
+    <div class="trick">
+      <div class="trick-title">⚡ Trick</div>
+      <p>Always add <strong>2 extra gaps (ends)</strong></p>
+      <p><strong>Total gaps = n + 1</strong></p>
+      </div>
+      <div class="formula-box">
+        <div class="formula-label">Formula</div>
+        <div class="formula-main">Gaps = n + 1</div>
+        <div class="formula-note">n = items placed first</div>
+      </div>
+
+    <p><strong>Long Way:</strong> Draw _ B _ B _ B _ ... and count</p>
+    <p><strong>Short Way:</strong> Directly do n + 1</p>
+  </div>
+
+  <!-- COMPLEMENT METHOD -->
+  <div class="card card-coral">
+    <h3>➖ Complement Method</h3>
+
+    <div class="trick">
+      <div class="trick-title">⚡ Trick</div>
+      <p>Instead of solving complex condition → subtract bad cases</p>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-main">Required = Total − Unwanted</div>
+    </div>
+
+    <p><strong>Long Way:</strong> Solve all valid cases manually</p>
+    <p><strong>Short Way:</strong> Total − unwanted</p>
+  </div>
+
+  <!-- BLOCK METHOD -->
+  <div class="card card-teal">
+    <h3>📦 Block Method (Together)</h3>
+
+    <div class="trick">
+      <div class="trick-title">⚡ Trick</div>
+      <p>Treat grouped items as <strong>1 unit</strong></p>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-main">Arrange units × internal arrangement</div>
+    </div>
+
+    <p><strong>Long Way:</strong> Try all cases</p>
+    <p><strong>Short Way:</strong> Make block → solve</p>
+  </div>
+
+  <!-- IDENTICAL OBJECTS -->
+  <div class="card card-blue">
+    <h3>🔁 Identical Objects</h3>
+
+    <div class="trick">
+      <div class="trick-title">⚡ Trick</div>
+      <p>Divide by repetition factorials</p>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-main">n! / (p₁! × p₂! × ...)</div>
+    </div>
+
+    <p><strong>Long Way:</strong> Count all arrangements</p>
+    <p><strong>Short Way:</strong> Direct formula</p>
+  </div>
+
+  <!-- CIRCULAR -->
+  <div class="card card-amber">
+    <h3>🔄 Circular Permutation</h3>
+
+    <div class="trick">
+      <div class="trick-title">⚡ Trick</div>
+      <p>Fix one person → remove rotation duplication</p>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-main">(n − 1)!</div>
+    </div>
+
+    <p><strong>Shortcut:</strong> Always subtract 1 from n</p>
+  </div>
+
+  <!-- NON-CONSECUTIVE -->
+  <div class="card card-green">
+    <h3>🚫 Non-Consecutive Selection</h3>
+
+    <div class="trick">
+      <div class="trick-title">⚡ Trick</div>
+      <p>Used when selecting positions with no adjacency</p>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-main">C(n − r + 1, r)</div>
+    </div>
+
+    <p><strong>Shortcut:</strong> Reduce available slots</p>
+  </div>
+
+  <!-- STARS AND BARS -->
+  <div class="card card-pink">
+    <h3>⭐ Stars & Bars (Distribution)</h3>
+
+    <div class="trick">
+      <div class="trick-title">⚡ Trick</div>
+      <p>Convert items into stars and separators</p>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-main">C(n + r − 1, r − 1)</div>
+    </div>
+
+    <p><strong>Shortcut:</strong> Just plug values</p>
+  </div>
+
+  <!-- DERANGEMENT -->
+  <div class="card card-coral">
+    <h3>🎭 Derangement (No one correct)</h3>
+
+    <div class="trick">
+      <div class="trick-title">⚡ Trick</div>
+      <p>No one gets correct position</p>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-main">!n ≈ n!/e</div>
+    </div>
+
+    <p><strong>Shortcut:</strong> Use approximation in MCQs</p>
+  </div>
+
+</div>
+<!-- ─────────────────────────────────────────── SECTION 8 ── -->
+<div id="s8" class="section">
+  <div class="section-header">
+    <div class="section-num" style="background: linear-gradient(135deg, #444441, #2C2C2A);">8</div>
+    <div>
+      <div class="section-sub">Quick Revision</div>
+      <h2>Master Summary Sheet</h2>
+    </div>
+  </div>
+
+  <div style="overflow-x:auto;">
+  <table class="sum-table" style="background:var(--white); border:1px solid #E8E6DE; border-radius:var(--radius); overflow:hidden;">
+    <thead>
+      <tr style="background:var(--purple); color:white;">
+        <th style="padding:14px 16px;">Concept</th>
+        <th style="padding:14px 16px;">Type</th>
+        <th style="padding:14px 16px;">Keyword / When to Use</th>
+        <th style="padding:14px 16px;">Formula</th>
+        <th style="padding:14px 16px;">Example</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Multiplication Rule</strong></td>
+        <td><span class="tag tag-and">AND</span></td>
+        <td>Tasks done together / simultaneously</td>
+        <td class="code">m × n</td>
+        <td style="font-size:12px;">3 flights × 4 taxis = 12</td>
+      </tr>
+      <tr>
+        <td><strong>Addition Rule</strong></td>
+        <td><span class="tag tag-or">OR</span></td>
+        <td>Alternative choices / either one</td>
+        <td class="code">m + n</td>
+        <td style="font-size:12px;">5 samosas + 3 kachoris = 8</td>
+      </tr>
+      <tr>
+        <td><strong>Linear Permutation</strong></td>
+        <td><span class="tag tag-perm">PERM</span></td>
+        <td>Arrange / order matters / rank / row / word</td>
+        <td class="code">n! / (n−r)!</td>
+        <td style="font-size:12px;">5P3 = 60</td>
+      </tr>
+      <tr>
+        <td><strong>Combination</strong></td>
+        <td><span class="tag tag-comb">COMB</span></td>
+        <td>Select / team / committee / group</td>
+        <td class="code">n! / r!(n−r)!</td>
+        <td style="font-size:12px;">10C3 = 120</td>
+      </tr>
+      <tr>
+        <td><strong>Circular Permutation</strong></td>
+        <td><span class="tag tag-circ">CIRC</span></td>
+        <td>Round table / circular arrangement</td>
+        <td class="code">(n−1)!</td>
+        <td style="font-size:12px;">6 people = 5! = 120</td>
+      </tr>
+      <tr>
+        <td><strong>Necklace / Garland</strong></td>
+        <td><span class="tag tag-circ">NECK</span></td>
+        <td>Beads / flowers / can be flipped</td>
+        <td class="code">½(n−1)!</td>
+        <td style="font-size:12px;">6 beads = ½×5! = 60</td>
+      </tr>
+      <tr>
+        <td><strong>Identical Objects</strong></td>
+        <td><span class="tag tag-ident">IDENT</span></td>
+        <td>Repeated letters/items (COMMITTEE, ROOT)</td>
+        <td class="code">n!/(p₁!×p₂!…)</td>
+        <td style="font-size:12px;">ROOT = 4!/2! = 12</td>
+      </tr>
+      <tr>
+        <td><strong>Repetition Allowed</strong></td>
+        <td><span class="tag tag-rep">REP</span></td>
+        <td>PIN / password / reuse digits/letters</td>
+        <td class="code">nʳ</td>
+        <td style="font-size:12px;">4-digit PIN = 10⁴ = 10,000</td>
+      </tr>
+      <tr>
+        <td><strong>Always Included</strong></td>
+        <td><span class="tag tag-comb">COMB</span></td>
+        <td>Specific person MUST be in team</td>
+        <td class="code">(n−1)C(r−1)</td>
+        <td style="font-size:12px;">Fix A, choose 4 from 9 = 9C4</td>
+      </tr>
+      <tr>
+        <td><strong>One or More</strong></td>
+        <td><span class="tag tag-comb">COMB</span></td>
+        <td>At least one item selected from n</td>
+        <td class="code">2ⁿ − 1</td>
+        <td style="font-size:12px;">From 4 items = 2⁴−1 = 15</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────────────── SECTION 9 ── -->
+<div id="s9" class="section">
+  <div class="section-header">
+    <div class="section-num" style="background: linear-gradient(135deg, #185FA5, #534AB7);">9</div>
+    <div>
+      <div class="section-sub">Test Yourself</div>
+      <h2>Practice Section</h2>
+    </div>
+  </div>
+
+  <p style="color:var(--text2); margin-bottom:20px; font-size:14px;">Try each question yourself first, then click "Show Answer" to reveal the solution.</p>
+
+  <!-- Basic -->
+  <div style="background:var(--green-light); border-radius:var(--radius-sm); padding:10px 16px; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+    <span style="font-size:16px;">🟢</span>
+    <strong style="font-size:14px; color:var(--green);">Section A — Basic Questions</strong>
+  </div>
+
+  <div class="practice-q">
+    <div class="practice-q-text">Q1. Evaluate 10C2.</div>
+    <button class="reveal-btn" onclick="toggle(this)">Show Answer ▾</button>
+    <div class="practice-ans">10C2 = 10C8 = (10×9)/(2×1) = 90/2 = <strong>45</strong></div>
+  </div>
+
+  <div class="practice-q">
+    <div class="practice-q-text">Q2. In how many ways can 5 persons stand in a row for a photo?</div>
+    <button class="reveal-btn" onclick="toggle(this)">Show Answer ▾</button>
+    <div class="practice-ans">All 5 arranged in a row = 5P5 = 5! = 5×4×3×2×1 = <strong>120 ways</strong></div>
+  </div>
+
+  <div class="practice-q">
+    <div class="practice-q-text">Q3. Evaluate 9P0.</div>
+    <button class="reveal-btn" onclick="toggle(this)">Show Answer ▾</button>
+    <div class="practice-ans">9P0 = 9! / (9-0)! = 9!/9! = <strong>1</strong> &nbsp;(Zero items arranged = 1 way, the "do nothing" way)</div>
+  </div>
+
+  <div class="practice-q">
+    <div class="practice-q-text">Q4. Simplify: 12! / (10! × 2!)</div>
+    <button class="reveal-btn" onclick="toggle(this)">Show Answer ▾</button>
+    <div class="practice-ans">= (12 × 11 × 10!) / (10! × 2) = (12 × 11) / 2 = 132/2 = <strong>66</strong></div>
+  </div>
+
+  <!-- Moderate -->
+  <div style="background:var(--amber-light); border-radius:var(--radius-sm); padding:10px 16px; margin:20px 0 16px; display:flex; align-items:center; gap:8px;">
+    <span style="font-size:16px;">🟡</span>
+    <strong style="font-size:14px; color:var(--amber);">Section B — Moderate Questions</strong>
+  </div>
+
+  <div class="practice-q">
+    <div class="practice-q-text">Q5. How many ways can 4 red balls, 3 yellow balls, and 2 green balls be arranged in a row (same colour balls are identical)?</div>
+    <button class="reveal-btn" onclick="toggle(this)">Show Answer ▾</button>
+    <div class="practice-ans">Total = 9 balls, identical objects formula:<br>9! / (4! × 3! × 2!) = 362880 / (24 × 6 × 2) = 362880 / 288 = <strong>1,260 ways</strong></div>
+  </div>
+
+  <div class="practice-q">
+    <div class="practice-q-text">Q6. How many ways can 8 people sit at a round table if 2 particular people must always sit together?</div>
+    <button class="reveal-btn" onclick="toggle(this)">Show Answer ▾</button>
+    <div class="practice-ans">
+      Step 1: Treat the 2 people as 1 unit → 7 units total<br>
+      Step 2: Arrange 7 units in circle = (7-1)! = 6! = 720<br>
+      Step 3: 2 people within the unit can swap = 2! = 2<br>
+      Total = 6! × 2 = 720 × 2 = <strong>1,440 ways</strong>
+    </div>
+  </div>
+
+  <div class="practice-q">
+    <div class="practice-q-text">Q7. From 5 consonants and 4 vowels, how many words of 3 consonants and 2 vowels can be formed?</div>
+    <button class="reveal-btn" onclick="toggle(this)">Show Answer ▾</button>
+    <div class="practice-ans">
+      Step 1: Select 3 consonants from 5: 5C3 = 10<br>
+      Step 2: Select 2 vowels from 4: 4C2 = 6<br>
+      Step 3: Arrange the 5 chosen letters in a word: 5! = 120<br>
+      Total = 10 × 6 × 120 = <strong>7,200 words</strong>
+    </div>
+  </div>
+
+  <div class="practice-q">
+    <div class="practice-q-text">Q8. How many numbers between 100 and 1000 can be formed with digits 0,1,2,3,4,5 (no repetition)?</div>
+    <button class="reveal-btn" onclick="toggle(this)">Show Answer ▾</button>
+    <div class="practice-ans">
+      3-digit numbers, first digit ≠ 0.<br>
+      Hundreds place: 5 choices (1,2,3,4,5)<br>
+      Tens place: 5 remaining digits (including 0)<br>
+      Units place: 4 remaining digits<br>
+      Total = 5 × 5 × 4 = <strong>100 numbers</strong>
+    </div>
+  </div>
+
+  <!-- CA Level -->
+  <div style="background:var(--purple-light); border-radius:var(--radius-sm); padding:10px 16px; margin:20px 0 16px; display:flex; align-items:center; gap:8px;">
+    <span style="font-size:16px;">🟣</span>
+    <strong style="font-size:14px; color:var(--purple);">Section C — Previous CA Foundation Level</strong>
+  </div>
+
+  <div class="practice-q">
+    <div class="practice-q-text">Q9. If nP4 = 12 × nP2, find n.</div>
+    <button class="reveal-btn" onclick="toggle(this)">Show Answer ▾</button>
+    <div class="practice-ans">
+      Expand: n(n-1)(n-2)(n-3) = 12 × n(n-1)<br>
+      Cancel n(n-1) from both sides: (n-2)(n-3) = 12<br>
+      Since 4 × 3 = 12, we have (n-2) = 4 → <strong>n = 6</strong><br>
+      Verify: 6P4 = 360, 12 × 6P2 = 12 × 30 = 360 ✓
+    </div>
+  </div>
+
+  <div class="practice-q">
+    <div class="practice-q-text">Q10. How many ways can letters of "COMPUTER" be rearranged (excluding the original word)?</div>
+    <button class="reveal-btn" onclick="toggle(this)">Show Answer ▾</button>
+    <div class="practice-ans">
+      COMPUTER = 8 distinct letters<br>
+      Total arrangements = 8! = 40,320<br>
+      Subtract 1 (the original word): 40,320 − 1 = <strong>40,319 ways</strong>
+    </div>
+  </div>
+
+  <div class="practice-q">
+    <div class="practice-q-text">Q11. In how many ways can the word "ASSASSINATION" be arranged?</div>
+    <button class="reveal-btn" onclick="toggle(this)">Show Answer ▾</button>
+    <div class="practice-ans">
+      ASSASSINATION = 13 letters: A×3, S×4, I×2, N×2, T×1, O×1<br>
+      Ways = 13! / (3! × 4! × 2! × 2! × 1! × 1!)<br>
+      = 6,227,020,800 / (6 × 24 × 2 × 2) = 6,227,020,800 / 576 = <strong>10,810,800 ways</strong>
+    </div>
+  </div>
+
+  <div class="practice-q">
+    <div class="practice-q-text">Q12. If nC12 = nC8, find nC17 and nC20.</div>
+    <button class="reveal-btn" onclick="toggle(this)">Show Answer ▾</button>
+    <div class="practice-ans">
+      Since nCr = nC(n-r), if nC12 = nC8, then 12 + 8 = n → <strong>n = 20</strong><br>
+      20C17 = 20C3 = (20×19×18)/(3×2×1) = 6840/6 = <strong>1,140</strong><br>
+      20C20 = <strong>1</strong>
+    </div>
+  </div>
+
+  <div class="practice-q">
+    <div class="practice-q-text">Q13. A polygon has 35 diagonals. Find the number of its sides.</div>
+    <button class="reveal-btn" onclick="toggle(this)">Show Answer ▾</button>
+    <div class="practice-ans">
+      Diagonals in n-sided polygon = nC2 − n = n(n-1)/2 − n<br>
+      Set equal to 35: n(n-1)/2 − n = 35<br>
+      n(n-1) − 2n = 70 → n² − 3n − 70 = 0<br>
+      (n-10)(n+7) = 0 → n = 10 (positive value)<br>
+      <strong>The polygon has 10 sides (Decagon)</strong>
+    </div>
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <p>Created for <strong>CA Foundation Student</strong> — Built with love for future Chartered Accountant (Arpita Pahwa) 🇮🇳</p>
+  <p style="margin-top:6px; font-size:12px; opacity:0.7;">"If you can count logically, you can crack any P&amp;C problem in the world."</p>
+</div>
+
+<script>
+function toggle(btn) {
+  const ans = btn.nextElementSibling;
+  if (ans.classList.contains('show')) {
+    ans.classList.remove('show');
+    btn.textContent = 'Show Answer ▾';
+  } else {
+    ans.classList.add('show');
+    btn.textContent = 'Hide Answer ▴';
+  }
+}
+</script>
+</body>
+</html>
